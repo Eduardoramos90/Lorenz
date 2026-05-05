@@ -1,0 +1,32 @@
+import serial
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+ser = serial.Serial('COM5', 115200)
+
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+xs, ys, zs = [], [], []
+
+plt.ion()
+
+while True:
+    try:
+        line = ser.readline().decode().strip()
+        parts = [float(p) for p in line.split(',')]
+
+        xs.append(parts[0])
+        ys.append(parts[1])
+        zs.append(parts[2])
+
+        if len(xs) > 1000:
+            xs.pop(0); ys.pop(0); zs.pop(0)
+
+        ax.clear()
+        ax.plot(xs, ys, zs, lw=0.5)
+
+        plt.pause(0.001)
+
+    except:
+        continue

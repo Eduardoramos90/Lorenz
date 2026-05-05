@@ -1,0 +1,23 @@
+float x = 0.1, y = 0.0, z = 0.0;
+float sigma = 10.0, rho = 28.0, beta = 8.0/3.0;
+float dt = 0.01;
+
+void setup() {
+  Serial.begin(115200);
+}
+
+void loop() {
+  // Cálculo das equações de Lorenz
+  float dx = sigma * (y - x) * dt;
+  float dy = (x * (rho - z) - y) * dt;
+  float dz = (x * y - beta * z) * dt;
+
+  x += dx; y += dy; z += dz;
+
+  // Envia as coordenadas para o Python
+  Serial.print(x); Serial.print(",");
+  Serial.print(y); Serial.print(",");
+  Serial.println(z);
+
+  delay(10); 
+}

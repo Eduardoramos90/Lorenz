@@ -1,0 +1,38 @@
+import serial
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+ser = serial.Serial('COM5', 115200)
+
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+xs, ys, zs = [], [], []
+
+plt.ion()
+
+while True:
+    try:
+        # coleta vários pontos antes de desenhar
+        for _ in range(50):
+            line = ser.readline().decode().strip()
+            parts = [float(p) for p in line.split(',')]
+
+            xs.append(parts[0])
+            ys.append(parts[1])
+            zs.append(parts[2])
+
+        if len(xs) > 1000:
+            xs = xs[-1000:]
+            ys = ys[-1000:]
+            zs = zs[-1000:]
+
+        # desenha só de vez em quando
+        ax.clear()
+        ax.plot(xs, ys, zs, lw=0.5)
+
+        plt.draw()
+        plt.pause(0.05)
+
+    except:
+        continue

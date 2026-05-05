@@ -13,20 +13,26 @@ plt.ion()
 
 while True:
     try:
-        line = ser.readline().decode().strip()
-        parts = [float(p) for p in line.split(',')]
+        # coleta vários pontos antes de desenhar
+        for _ in range(50):
+            line = ser.readline().decode().strip()
+            parts = [float(p) for p in line.split(',')]
 
-        xs.append(parts[0])
-        ys.append(parts[1])
-        zs.append(parts[2])
+            xs.append(parts[0])
+            ys.append(parts[1])
+            zs.append(parts[2])
 
         if len(xs) > 1000:
-            xs.pop(0); ys.pop(0); zs.pop(0)
+            xs = xs[-1000:]
+            ys = ys[-1000:]
+            zs = zs[-1000:]
 
+        # desenha só de vez em quando
         ax.clear()
         ax.plot(xs, ys, zs, lw=0.5)
 
-        plt.pause(0.001)
+        plt.draw()
+        plt.pause(0.05)
 
     except:
         continue
